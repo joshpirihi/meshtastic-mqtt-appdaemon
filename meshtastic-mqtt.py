@@ -22,7 +22,7 @@ class MeshtasticMQTT(hass.Hass):
     topic = "msh/1/c/#"
     # generate client ID with pub prefix randomly
     client_id = f'python-mqtt-{random.randint(0, 100)}'
-    usename = 'user'
+    username = 'user'
     password = 'pass'
 
     traccarHost = '10.147.253.250'
