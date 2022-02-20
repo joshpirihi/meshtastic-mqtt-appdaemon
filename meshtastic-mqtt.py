@@ -72,13 +72,26 @@ class MeshtasticMQTT(hass.Hass):
                         print(submitted)
                 #lets also publish the battery directly
                 if pos.battery_level > 0:
-                    client.publish("/mesh/"+str(getattr(mp, "from"))+"/battery", pos.battery_level)
+                    client.publish("meshtastic/"+str(getattr(mp, "from"))+"/battery", pos.battery_level)
             elif mp.decoded.portnum == ENVIRONMENTAL_MEASUREMENT_APP:
                 env = environmental_measurement_pb2.EnvironmentalMeasurement()
                 env.ParseFromString(mp.decoded.payload)
                 print(env)
-                client.publish("/mesh/"+str(getattr(mp, "from"))+"/temperature", env.temperature)
-                client.publish("/mesh/"+str(getattr(mp, "from"))+"/relative_humidity", env.relative_humidity)
+                client.publish("meshtastic/"+str(getattr(mp, "from"))+"/temperature", env.temperature)
+                client.publish("meshtastic/"+str(getattr(mp, "from"))+"/relative_humidity", env.relative_humidity)
+            elif mp.decoded.portnum == portnums_pb2.NODEINFO_APP:
+                info = mesh_pb2.User()
+                info.ParseFromString(mp.decoded.payload)
+                #print(MessageToJson(info))
+                client.publish("meshtastic/"+str(getattr(mp, "from"))+"/user", MessageToJson(info))
+            elif mp.decoded.portnum == portnums_pb2.TEXT_MESSAGE_APP:
+                text = {
+                    "message": mp.decoded.payload.decode("utf-8"),
+                    "from": getattr(mp, "from"),
+                    "to": mp.to
+                }
+                client.publish("meshtastic/"+str(getattr(mp, "from"))+"/text_message", json.dumps(text))
+
                 
         client.subscribe(self.topic)
         client.on_message = on_message
