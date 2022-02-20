@@ -1,5 +1,6 @@
 # python3.6
 
+import meshtastic_mqtt.portnums_pb2 as portnums_pb2
 from portnums_pb2 import ENVIRONMENTAL_MEASUREMENT_APP, POSITION_APP
 import random
 import json
