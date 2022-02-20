@@ -36,7 +36,7 @@ class MeshtasticMQTT(hass.Hass):
                 print("Failed to connect, return code %d\n", rc)
 
         client = mqtt_client.Client(self.client_id)
-        client.username_pw_set(username, password)
+        client.username_pw_set(self.username, self.password)
         client.on_connect = on_connect
         client.connect(self.broker, self.port)
         return client
